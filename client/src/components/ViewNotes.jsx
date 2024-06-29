@@ -215,7 +215,7 @@ export default function ViewNotes() {
   }, [searchQuery, cards]);
 
   return (
-    <div className="ml-[calc(100px)] p-8 ">
+    <div className="sm:ml-[100px] ml-[80px] py-8 px-2 sm:p-8 ">
       <h2 className="text-3xl font-bold text-start mt-1">
         All Your Notes at One Place
       </h2>

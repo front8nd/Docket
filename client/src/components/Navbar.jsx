@@ -3,7 +3,7 @@ import Search from "./Search";
 
 export default function Navbar() {
   return (
-    <div className="p-6 bg-white border-b-[1px] border-gray-100  text-black ml-[calc(100px)] ">
+    <div className="py-6  bg-white border-b-[1px] border-gray-100  text-black sm:ml-[80px] ml-[40px] ">
       <Search />
     </div>
   );
