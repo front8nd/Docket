@@ -1,0 +1,32 @@
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+  z-index: 999;
+}
+
+.loader {
+  height: 4px;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  --c: no-repeat linear-gradient(#007aff 0 0);
+  background: var(--c), var(--c), #93c7ff;
+  background-size: 60% 100%;
+  animation: l16 3s infinite;
+  z-index: 999;
+}
+@keyframes l16 {
+  0% {
+    background-position: -150% 0, -150% 0;
+  }
+  66% {
+    background-position: 250% 0, -150% 0;
+  }
+  100% {
+    background-position: 250% 0, 250% 0;
+  }
+}
