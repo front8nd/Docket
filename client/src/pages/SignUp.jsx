@@ -1,23 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { register } from "../redux/authSlice";
+import { useSelector, useDispatch } from "react-redux";
+
 export default function SignUp() {
+  const dispatch = useDispatch();
+  const userData = useSelector((state) => state.auth);
   const [data, setData] = useState({
+    name: "",
     email: "",
     password: "",
   });
+  const [error, setError] = useState("");
 
   const changeHandler = (e) => {
     const { name, value } = e.target;
     setData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const submitHandler = async () => {
+  const submitHandler = async (e) => {
+    e.preventDefault();
     try {
-      console.log("first");
-    } catch (error) {
-      console.log(error);
+      await dispatch(register(data));
+      if (userData.status === "success") {
+        console.log("Registered Successfully");
+      }
+    } catch (err) {
+      console.error("Failed to register:", err.message);
+      setError("Failed to register. Please try again later.");
     }
   };
+
+  useEffect(() => {
+    if (userData.status === "loading") {
+      console.log("Please Wait");
+    } else if (userData.status === "failed") {
+      console.log("Failed to Register", userData.error);
+      setError("Failed to register: " + userData.error);
+    }
+  }, [userData.status, userData.error]);
+
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -30,7 +52,7 @@ export default function SignUp() {
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-6" action="#" method="POST">
+        <form onSubmit={submitHandler} className="space-y-6">
           <div>
             <div className="mb-2">
               <label
@@ -101,6 +123,9 @@ export default function SignUp() {
               Register
             </button>
           </div>
+          {error && (
+            <p className="mt-2 text-center text-sm text-red-600">{error}</p>
+          )}
         </form>
 
         <p className="mt-10 text-center text-sm text-gray-500">

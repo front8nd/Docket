@@ -4,6 +4,7 @@ import { login } from "../redux/authSlice";
 import { useDispatch } from "react-redux";
 export default function Login() {
   const dispatch = useDispatch();
+  const userData = useSelector((state) => state.auth);
   const [data, setData] = useState({
     email: "",
     password: "",
@@ -14,14 +15,22 @@ export default function Login() {
     setData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const submitHandler = async () => {
-    try {
-      dispatch(login({ email, password }));
-      console.log("first");
-    } catch (error) {
-      console.log(error);
-    }
+  const submitHandler = (e) => {
+    e.preventDefault();
+    dispatch(login(data));
   };
+
+  useEffect(() => {
+    if (userData.status === "loading") {
+      console.log("Please Wait");
+    } else if (userData.status === "succeeded") {
+      console.log("Login Successfully");
+    } else if (userData.status === "failed") {
+      console.log("Failed to Login", userData?.error);
+    }
+  }, [userData.status, userData.error]);
+
+  console.log(data);
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">

@@ -3,10 +3,10 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Users = require("../../models/users");
 const router = express.Router();
-
 // Register
-router.post("/register", async (req, res) => {
+router.post("/api/Users/register", async (req, res) => {
   const { name, email, password } = req.body;
+  console.log("first");
   try {
     const userExists = await Users.findOne({ email });
     if (userExists) {

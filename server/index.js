@@ -43,9 +43,9 @@ connectToDB()
 
     //User Routes
 
-    // app.use("/api/auth", authRoutes);
-    // app.use(loginRoute);
-    // app.use(registerRoute);
+    //app.use(authRoutes);
+    app.use(loginRoute);
+    app.use(registerRoute);
 
     // Handle unexpected errors
     app.use((err, req, res, next) => {
