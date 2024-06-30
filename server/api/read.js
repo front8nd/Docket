@@ -7,7 +7,6 @@ router.get("/api/read", async (req, res) => {
   try {
     console.log("GET /api/read request received");
     const allNotes = await notesModel.find({});
-    console.log("Retrieved notes from database:", allNotes);
     res.status(200).json({ success: true, data: allNotes });
   } catch (err) {
     console.error("Error retrieving notes:", err);

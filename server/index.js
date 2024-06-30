@@ -19,20 +19,33 @@ app.use(express.json());
 // Use cors middleware with options
 app.use(cors());
 
+// All Routes
+const readRoute = require("./api/read");
+const createRoute = require("./api/create");
+const deleteRoute = require("./api/delete");
+const updateRoute = require("./api/update");
+
+const authRoutes = require("./middleware/auth");
+const loginRoute = require("./api/Users/Login");
+const registerRoute = require("./api/Users/Register");
+
 // Connect to the database
 connectToDB()
   .then(() => {
     console.log("Database connected successfully");
-    // Start defining routes and listening to requests
-    const readRoute = require("./api/read");
-    const createRoute = require("./api/create");
-    const deleteRoute = require("./api/delete");
-    const updateRoute = require("./api/update");
+
+    // CRUD Routes
 
     app.use(readRoute);
     app.use(createRoute);
     app.use(deleteRoute);
     app.use(updateRoute);
+
+    //User Routes
+
+    // app.use("/api/auth", authRoutes);
+    // app.use(loginRoute);
+    // app.use(registerRoute);
 
     // Handle unexpected errors
     app.use((err, req, res, next) => {
@@ -48,7 +61,7 @@ connectToDB()
   })
   .catch((error) => {
     console.error("Database connection failed", error);
-    process.exit(1); // Exit the process if database connection fails
+    process.exit(1);
   });
 
-module.exports = app; // Ensure the app is exported for serverless handling
+module.exports = app;

@@ -8,10 +8,7 @@ if (process.env.NODE_ENV !== "production") {
 //Connect to MongoDB
 const connectToDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_DB, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(process.env.MONGO_DB);
     console.log("Connected to MongoDB");
   } catch (error) {
     console.error("Error connecting to MongoDB:", error);

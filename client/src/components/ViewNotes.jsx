@@ -3,7 +3,7 @@ import { MdEdit } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { MdDone } from "react-icons/md";
 import { RxCross1 } from "react-icons/rx";
-import { NotesData, getAllNotes } from "../redux/NotesSlice";
+import { NotesData } from "../redux/NotesSlice";
 import { AiOutlineDelete } from "react-icons/ai";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
