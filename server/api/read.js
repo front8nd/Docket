@@ -3,7 +3,7 @@ const router = express.Router();
 const notesModel = require("../models/notes");
 
 // Route to retrieve all notes
-router.get("/api/read", async (req, res) => {
+router.get("/api/read", async (res) => {
   try {
     console.log("GET /api/read request received");
     const allNotes = await notesModel.find({});

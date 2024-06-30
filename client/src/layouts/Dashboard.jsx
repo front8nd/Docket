@@ -1,5 +1,4 @@
 import React from "react";
-import CreateNotes from "../components/createNotes";
 import ViewNotes from "../components/ViewNotes";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
