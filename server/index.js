@@ -41,8 +41,6 @@ connectToDB()
     app.use(deleteRoute);
     app.use(updateRoute);
 
-    //User Routes
-
     //app.use(authRoutes);
     app.use(loginRoute);
     app.use(registerRoute);

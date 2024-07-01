@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { register } from "../redux/authSlice";
 import { useSelector, useDispatch } from "react-redux";
-
+import axios from "axios";
 export default function SignUp() {
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.auth);
@@ -21,7 +21,12 @@ export default function SignUp() {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      await dispatch(register(data));
+      // await dispatch(register(data));
+      const response = await axios.post(
+        "http://localhost:3000/api/users/login",
+        credentials
+      );
+      console.log(response.data);
       if (userData.status === "success") {
         console.log("Registered Successfully");
       }
