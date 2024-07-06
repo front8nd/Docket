@@ -4,12 +4,19 @@ const notesModel = require("../models/notes");
 
 // Route to delete note by ID
 router.put("/api/update", async (req, res) => {
-  const { id, title, content } = req.body;
+  const { userId, id, title, content } = req.body;
   try {
-    const updatedNote = await notesModel.findByIdAndUpdate(id, {
-      title: title,
-      content: content,
-    });
+    const updatedNote = await notesModel.findOneAndUpdate(
+      { _id: id, userId: userId },
+      { title, content },
+      { new: true }
+    );
+
+    if (!updatedNote) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Note not found or unauthorized" });
+    }
     res.status(200).json({ success: true, data: updatedNote });
   } catch (error) {
     console.error(error);

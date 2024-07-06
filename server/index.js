@@ -25,9 +25,8 @@ const createRoute = require("./api/create");
 const deleteRoute = require("./api/delete");
 const updateRoute = require("./api/update");
 
-const authRoutes = require("./middleware/auth");
-const loginRoute = require("./api/Users/Login");
-const registerRoute = require("./api/Users/Register");
+const loginRoute = require("./api/login");
+const registerRoute = require("./api/register");
 
 // Connect to the database
 connectToDB()

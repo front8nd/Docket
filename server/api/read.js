@@ -3,10 +3,11 @@ const router = express.Router();
 const notesModel = require("../models/notes");
 
 // Route to retrieve all notes
-router.get("/api/read", async (res) => {
+router.post("/api/read", async (req, res) => {
+  const { id } = req.body;
+  console.log(id);
   try {
-    console.log("GET /api/read request received");
-    const allNotes = await notesModel.find({});
+    const allNotes = await notesModel.find({ userId: id });
     res.status(200).json({ success: true, data: allNotes });
   } catch (err) {
     console.error("Error retrieving notes:", err);

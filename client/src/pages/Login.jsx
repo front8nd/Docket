@@ -1,9 +1,10 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { login } from "../redux/authSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 export default function Login() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const userData = useSelector((state) => state.auth);
   const [data, setData] = useState({
     email: "",
@@ -20,17 +21,13 @@ export default function Login() {
     dispatch(login(data));
   };
 
+  console.log(userData);
   useEffect(() => {
-    if (userData.status === "loading") {
-      console.log("Please Wait");
-    } else if (userData.status === "succeeded") {
-      console.log("Login Successfully");
-    } else if (userData.status === "failed") {
-      console.log("Failed to Login", userData?.error);
+    if (userData.isAuthenticated === true) {
+      navigate("/");
     }
-  }, [userData.status, userData.error]);
+  }, [dispatch, userData.isAuthenticated]);
 
-  console.log(data);
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -100,13 +97,17 @@ export default function Login() {
               />
             </div>
           </div>
-
+          {userData.error && (
+            <p className="mt-2 text-center font-bold text-red-600  rounded-md shadow-lg py-2">
+              {userData.error.message}
+            </p>
+          )}
           <div>
             <button
               type="submit"
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Sign in
+              {userData.loading === true ? "Please Wait.." : "Sign in"}
             </button>
           </div>
         </form>

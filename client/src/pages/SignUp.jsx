@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { register } from "../redux/authSlice";
 import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
 export default function SignUp() {
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.auth);
@@ -11,7 +10,6 @@ export default function SignUp() {
     email: "",
     password: "",
   });
-  const [error, setError] = useState("");
 
   const changeHandler = (e) => {
     const { name, value } = e.target;
@@ -20,31 +18,20 @@ export default function SignUp() {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    try {
-      // await dispatch(register(data));
-      const response = await axios.post(
-        "http://localhost:3000/api/users/login",
-        credentials
-      );
-      console.log(response.data);
-      if (userData.status === "success") {
-        console.log("Registered Successfully");
-      }
-    } catch (err) {
-      console.error("Failed to register:", err.message);
-      setError("Failed to register. Please try again later.");
-    }
+    await dispatch(register(data));
   };
 
   useEffect(() => {
-    if (userData.status === "loading") {
-      console.log("Please Wait");
-    } else if (userData.status === "failed") {
-      console.log("Failed to Register", userData.error);
-      setError("Failed to register: " + userData.error);
+    if (userData.registrationSuccess === "success") {
+      setData({
+        name: "",
+        email: "",
+        password: "",
+      });
     }
-  }, [userData.status, userData.error]);
-
+    [dispatch, userData.registrationSuccess];
+  });
+  console.log(userData);
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -120,16 +107,23 @@ export default function SignUp() {
               />
             </div>
           </div>
+          {userData.registrationSuccess && (
+            <p className="mt-2 text-center text-sm text-blue-600">
+              Registrated Successfully, You can Login Now
+            </p>
+          )}
           <div>
             <button
               type="submit"
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Register
+              {userData.loading === true ? "Please Wait.." : "Register"}
             </button>
           </div>
-          {error && (
-            <p className="mt-2 text-center text-sm text-red-600">{error}</p>
+          {userData.registrationError && (
+            <p className="mt-2 text-center font-bold text-red-600  rounded-md shadow-lg py-2">
+              {userData.registrationError.message}
+            </p>
           )}
         </form>
 

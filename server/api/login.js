@@ -1,14 +1,15 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const Users = require("../../models/users");
+const Users = require("../models/users");
 const router = express.Router();
 
 // Login
-router.post("/api/Users/login", async (req, res) => {
+router.post("/api/login", async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await Users.findOne({ email });
+    console.log(user);
     if (!user) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
@@ -22,7 +23,12 @@ router.post("/api/Users/login", async (req, res) => {
       expiresIn: "24h",
     });
 
-    res.json({ token });
+    // Exclude sensitive information
+    const { password: _, ...userWithoutPassword } = user._doc;
+
+    res.json({ token, user: userWithoutPassword });
+
+    // res.json({ token, user });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

@@ -9,6 +9,11 @@ import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import Loading from "./Loading";
 export default function ViewNotes() {
+  //Redux data
+  const dispatch = useDispatch();
+  const userData = useSelector((state) => state.auth);
+  const data = useSelector((state) => state.Notes.data);
+
   const [loading, setLoading] = useState(false);
   // Data
   const [formData, setFromData] = useState({
@@ -26,10 +31,6 @@ export default function ViewNotes() {
       setFromData((prev) => ({ ...prev, [name]: value }));
     }
   };
-
-  //Redux data
-  const dispatch = useDispatch();
-  const data = useSelector((state) => state.Notes.data);
 
   // Handle new card
   const [createNew, setCreateNew] = useState(false);
@@ -117,13 +118,24 @@ export default function ViewNotes() {
 
   // Read Note
   const [cards, setCards] = useState([]);
-
   const fetchData = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("https://docket-server.vercel.app/api/read");
+      /*
+      Send data via url
+      const userId = userData.userData.user._id; 
+      const res = await axios.get(`http://localhost:3000/api/read?id=${userId}
+      `);
+
+      Use req.query to access parameters
+
+      const { id } = req.query;
+
+      */
+      const res = await axios.post("http://localhost:3000/api/read", {
+        id: userData.userData.user._id,
+      });
       setCards(res.data.data);
-      dispatch(getAllNotes(res.data.data));
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -134,7 +146,7 @@ export default function ViewNotes() {
   // Fetch Data on render
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [dispatch]);
 
   // Create New Card
   const submitHandler = async (e) => {
@@ -143,16 +155,14 @@ export default function ViewNotes() {
     const formattedDate = formatDate();
 
     try {
-      const res = await axios.post(
-        "https://docket-server.vercel.app/api/create",
-        {
-          id: UUID,
-          title: formData.title,
-          content: formData.content,
-          date: formattedDate,
-          color: data.color,
-        }
-      );
+      const res = await axios.post("http://localhost:3000/api/create", {
+        userId: userData.userData.user._id,
+        id: UUID,
+        title: formData.title,
+        content: formData.content,
+        date: formattedDate,
+        color: data.color,
+      });
 
       dispatch(
         NotesData({ id: "", title: "", content: "", date: "", color: "" })
@@ -169,12 +179,9 @@ export default function ViewNotes() {
 
   const deleteCard = async (id) => {
     try {
-      const res = await axios.delete(
-        "https://docket-server.vercel.app/api/delete",
-        {
-          data: { id: id }, // pass data in Axios for DELETE requests
-        }
-      );
+      const res = await axios.delete("http://localhost:3000/api/delete", {
+        data: { id: id, userId: userData.userData.user._id },
+      });
       console.log(res);
       await fetchData();
     } catch (error) {
@@ -184,16 +191,15 @@ export default function ViewNotes() {
 
   // Update Data
   const [updatedData, setUpdatedData] = useState({});
-
+  console.log(cards);
   const updateCard = async (id) => {
+    console.log(id);
     try {
-      const res = await axios.put(
-        "https://docket-server.vercel.app/api/update",
-        {
-          id: id,
-          ...updatedData,
-        }
-      );
+      const res = await axios.put("http://localhost:3000/api/update", {
+        userId: userData.userData.user._id,
+        id: id,
+        ...updatedData,
+      });
       console.log(res);
       await fetchData();
       setEditCard(null);
@@ -214,6 +220,7 @@ export default function ViewNotes() {
     } else setFilteredCards(cards);
   }, [searchQuery, cards]);
 
+  console.log(userData.userData.user._id);
   return (
     <div className="sm:ml-[100px] ml-[80px] py-8 px-2 sm:p-8 ">
       <h2 className="text-3xl font-bold text-start mt-1">

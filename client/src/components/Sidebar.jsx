@@ -42,7 +42,7 @@ export default function Sidebar() {
     <div className="py-6 px-2 sm:p-6 absolute left-0 top-0 bottom-0 z-50 bg-white h-screen border-r-[1px] border-gray-100">
       <div className="text-black font-bold cursor-pointer mt-1">Docket</div>
       <div
-        className="mt-14"
+        className="mt-16"
         onClick={() => {
           setShowOPT(!showOPT);
         }}

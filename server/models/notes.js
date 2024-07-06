@@ -1,6 +1,11 @@
-const mangoose = require("mongoose");
+const mongoose = require("mongoose");
 
-const notesSchema = new mangoose.Schema({
+const notesSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
   id: {
     type: String,
     required: true,
@@ -12,7 +17,6 @@ const notesSchema = new mangoose.Schema({
   color: String,
 });
 
-// Notes is collection name inside the database
-const notesModel = mangoose.model("Notes", notesSchema);
+const notesModel = mongoose.model("Notes", notesSchema);
 
 module.exports = notesModel;
