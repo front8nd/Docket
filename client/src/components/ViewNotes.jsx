@@ -124,7 +124,7 @@ export default function ViewNotes() {
       /*
       Send data via url
       const userId = userData.userData.user._id; 
-      const res = await axios.get(`http://localhost:3000/api/read?id=${userId}
+      const res = await axios.get(`https://docket-server.vercel.app/api/read?id=${userId}
       `);
 
       Use req.query to access parameters
@@ -132,9 +132,12 @@ export default function ViewNotes() {
       const { id } = req.query;
 
       */
-      const res = await axios.post("http://localhost:3000/api/read", {
-        id: userData.userData.user._id,
-      });
+      const res = await axios.post(
+        "https://docket-server.vercel.app/api/read",
+        {
+          id: userData.userData.user._id,
+        }
+      );
       setCards(res.data.data);
       setLoading(false);
     } catch (error) {
@@ -155,14 +158,17 @@ export default function ViewNotes() {
     const formattedDate = formatDate();
 
     try {
-      const res = await axios.post("http://localhost:3000/api/create", {
-        userId: userData.userData.user._id,
-        id: UUID,
-        title: formData.title,
-        content: formData.content,
-        date: formattedDate,
-        color: data.color,
-      });
+      const res = await axios.post(
+        "https://docket-server.vercel.app/api/create",
+        {
+          userId: userData.userData.user._id,
+          id: UUID,
+          title: formData.title,
+          content: formData.content,
+          date: formattedDate,
+          color: data.color,
+        }
+      );
 
       dispatch(
         NotesData({ id: "", title: "", content: "", date: "", color: "" })
@@ -179,9 +185,12 @@ export default function ViewNotes() {
 
   const deleteCard = async (id) => {
     try {
-      const res = await axios.delete("http://localhost:3000/api/delete", {
-        data: { id: id, userId: userData.userData.user._id },
-      });
+      const res = await axios.delete(
+        "https://docket-server.vercel.app/api/delete",
+        {
+          data: { id: id, userId: userData.userData.user._id },
+        }
+      );
       console.log(res);
       await fetchData();
     } catch (error) {
@@ -195,11 +204,14 @@ export default function ViewNotes() {
   const updateCard = async (id) => {
     console.log(id);
     try {
-      const res = await axios.put("http://localhost:3000/api/update", {
-        userId: userData.userData.user._id,
-        id: id,
-        ...updatedData,
-      });
+      const res = await axios.put(
+        "https://docket-server.vercel.app/api/update",
+        {
+          userId: userData.userData.user._id,
+          id: id,
+          ...updatedData,
+        }
+      );
       console.log(res);
       await fetchData();
       setEditCard(null);
