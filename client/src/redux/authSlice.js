@@ -9,7 +9,7 @@ export const login = createAsyncThunk(
   async (credentials, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        "http://docket-server.vercel.app/api/login",
+        "https://docket-server.vercel.app/api/login",
         credentials
       );
       return response.data;
