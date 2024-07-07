@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const notesModel = require("../models/notes");
+const authMiddleware = require("../middleware/auth");
 
 // Route to retrieve all notes
-router.post("/api/read", async (req, res) => {
+router.post("/api/read", authMiddleware, async (req, res) => {
   const { id } = req.body;
   console.log(id);
   try {

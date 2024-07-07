@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const notesModel = require("../models/notes");
+const authMiddleware = require("../middleware/auth");
 
 // Route to delete note by ID
-router.put("/api/update", async (req, res) => {
+router.put("/api/update", authMiddleware, async (req, res) => {
   const { userId, id, title, content } = req.body;
   try {
     const updatedNote = await notesModel.findOneAndUpdate(

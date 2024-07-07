@@ -135,6 +135,12 @@ export default function ViewNotes() {
       const res = await axios.post(
         "https://docket-server.vercel.app/api/read",
         {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${userData.userData.token}`,
+          },
+        },
+        {
           id: userData.userData.user._id,
         }
       );
@@ -160,6 +166,12 @@ export default function ViewNotes() {
     try {
       const res = await axios.post(
         "https://docket-server.vercel.app/api/create",
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${userData.userData.token}`,
+          },
+        },
         {
           userId: userData.userData.user._id,
           id: UUID,
@@ -188,6 +200,12 @@ export default function ViewNotes() {
       const res = await axios.delete(
         "https://docket-server.vercel.app/api/delete",
         {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${userData.userData.token}`,
+          },
+        },
+        {
           data: { id: id, userId: userData.userData.user._id },
         }
       );
@@ -206,6 +224,12 @@ export default function ViewNotes() {
     try {
       const res = await axios.put(
         "https://docket-server.vercel.app/api/update",
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${userData.userData.token}`,
+          },
+        },
         {
           userId: userData.userData.user._id,
           id: id,

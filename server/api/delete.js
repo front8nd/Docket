@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const notesModel = require("../models/notes");
+const authMiddleware = require("../middleware/auth");
 
 // Route to delete note by ID
-router.delete("/api/delete", async (req, res) => {
+router.delete("/api/delete", authMiddleware, async (req, res) => {
   const { userId, id } = req.body;
   console.log(req.body);
   try {
