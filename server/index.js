@@ -17,25 +17,6 @@ app.use(express.json());
 // Use cors middleware with options
 app.use(cors());
 
-// Flag to track database connection status
-let isDBConnected = false;
-
-// Middleware to check database connection
-const checkDBConnection = (req, res, next) => {
-  if (isDBConnected) {
-    next();
-  } else {
-    res
-      .status(503)
-      .json({
-        error: "Service Temporarily Unavailable: Connecting to database",
-      });
-  }
-};
-
-// Apply the database connection check middleware to all routes
-app.use(checkDBConnection);
-
 // All Routes
 const readRoute = require("./api/read");
 const createRoute = require("./api/create");
@@ -45,51 +26,84 @@ const updateRoute = require("./api/update");
 const loginRoute = require("./api/login");
 const registerRoute = require("./api/register");
 
-// Retry connection to the database with exponential backoff
-const connectWithRetry = (retries = 5, delay = 2000) => {
-  connectToDB()
-    .then(() => {
-      console.log("Database connected successfully");
-      isDBConnected = true;
+// // Flag to track database connection status
+// let isDBConnected = false;
 
-      // CRUD Routes
-      app.use(readRoute);
-      app.use(createRoute);
-      app.use(deleteRoute);
-      app.use(updateRoute);
+// // Middleware to check database connection
+// const checkDBConnection = (req, res, next) => {
+//   if (isDBConnected) {
+//     next();
+//   } else {
+//     res.status(503).json({
+//       error: "Service Temporarily Unavailable: Connecting to database",
+//     });
+//   }
+// };
 
-      app.use(loginRoute);
-      app.use(registerRoute);
+// // Retry connection to the database with exponential backoff
+// const connectWithRetry = (retries = 5, delay = 2000) => {
+//   connectToDB()
+//     .then(() => {
+//       console.log("Database connected successfully");
+//       isDBConnected = true;
 
-      // Handle unexpected errors
-      app.use((err, req, res, next) => {
-        console.error("Unexpected error", err);
-        res.status(500).json({ error: "An unexpected error occurred" });
-      });
-    })
-    .catch((error) => {
-      console.error(
-        `Database connection failed. Retrying in ${delay / 1000} seconds...`,
-        error
-      );
-      if (retries > 0) {
-        setTimeout(() => connectWithRetry(retries - 1, delay * 2), delay);
-      } else {
-        console.error(
-          "Could not connect to the database after multiple attempts. Exiting."
-        );
-        process.exit(1);
-      }
-    });
-};
+//       // CRUD Routes
+//       app.use(readRoute);
+//       app.use(createRoute);
+//       app.use(deleteRoute);
+//       app.use(updateRoute);
+
+//       app.use(loginRoute);
+//       app.use(registerRoute);
+
+//       // Handle unexpected errors
+//       app.use((err, req, res, next) => {
+//         console.error("Unexpected error", err);
+//         res.status(500).json({ error: "An unexpected error occurred" });
+//       });
+
+//       // Start the server
+//       const PORT = process.env.PORT || 3000;
+//       app.listen(PORT, () => {
+//         console.log(`Server is running on port ${PORT}`);
+//       });
+//     })
+//     .catch((error) => {
+//       console.error(
+//         `Database connection failed. Retrying in ${delay / 1000} seconds...`,
+//         error
+//       );
+//       if (retries > 0) {
+//         setTimeout(() => connectWithRetry(retries - 1, delay * 2), delay);
+//       } else {
+//         console.error(
+//           "Could not connect to the database after multiple attempts. Exiting."
+//         );
+//         process.exit(1);
+//       }
+//     });
+// };
+
+// // Apply the database connection check middleware to all routes
+// app.use(checkDBConnection);
+
+// // Start trying to connect to the database
+// connectWithRetry();
+
+connectToDB();
+// CRUD Routes
+app.use(readRoute);
+app.use(createRoute);
+app.use(deleteRoute);
+app.use(updateRoute);
+
+app.use(loginRoute);
+app.use(registerRoute);
 
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
-
-  // Start trying to connect to the database
-  connectWithRetry();
 });
 
 module.exports = app;
