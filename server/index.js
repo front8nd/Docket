@@ -17,15 +17,6 @@ app.use(express.json());
 // Use cors middleware with options
 app.use(cors());
 
-// All Routes
-const readRoute = require("./api/read");
-const createRoute = require("./api/create");
-const deleteRoute = require("./api/delete");
-const updateRoute = require("./api/update");
-
-const loginRoute = require("./api/login");
-const registerRoute = require("./api/register");
-
 // Flag to track database connection status
 let isDBConnected = false;
 
@@ -41,6 +32,18 @@ const checkDBConnection = (req, res, next) => {
       });
   }
 };
+
+// Apply the database connection check middleware to all routes
+app.use(checkDBConnection);
+
+// All Routes
+const readRoute = require("./api/read");
+const createRoute = require("./api/create");
+const deleteRoute = require("./api/delete");
+const updateRoute = require("./api/update");
+
+const loginRoute = require("./api/login");
+const registerRoute = require("./api/register");
 
 // Retry connection to the database with exponential backoff
 const connectWithRetry = (retries = 5, delay = 2000) => {
@@ -63,12 +66,6 @@ const connectWithRetry = (retries = 5, delay = 2000) => {
         console.error("Unexpected error", err);
         res.status(500).json({ error: "An unexpected error occurred" });
       });
-
-      // Start the server
-      const PORT = process.env.PORT || 3000;
-      app.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}`);
-      });
     })
     .catch((error) => {
       console.error(
@@ -86,10 +83,13 @@ const connectWithRetry = (retries = 5, delay = 2000) => {
     });
 };
 
-// Apply the database connection check middleware to all routes
-app.use(checkDBConnection);
+// Start the server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 
-// Start trying to connect to the database
-connectWithRetry();
+  // Start trying to connect to the database
+  connectWithRetry();
+});
 
 module.exports = app;
