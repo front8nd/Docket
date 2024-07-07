@@ -122,7 +122,7 @@ export default function SignUp() {
           </div>
           {userData.registrationError && (
             <p className="mt-2 text-center font-bold text-red-600  rounded-md shadow-lg py-2">
-              {userData.registrationError.message}
+              {userData.registrationError.message || userData.registrationError}
             </p>
           )}
         </form>

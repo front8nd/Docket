@@ -99,7 +99,7 @@ export default function Login() {
           </div>
           {userData.error && (
             <p className="mt-2 text-center font-bold text-red-600  rounded-md shadow-lg py-2">
-              {userData.error.message}
+              {userData.error.message || userData.error.error}
             </p>
           )}
           <div>
