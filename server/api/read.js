@@ -6,7 +6,6 @@ const authMiddleware = require("../middleware/auth");
 // Route to retrieve all notes
 router.post("/api/read", authMiddleware, async (req, res) => {
   const { id } = req.body;
-  console.log(id);
   try {
     const allNotes = await notesModel.find({ userId: id });
     res.status(200).json({ success: true, data: allNotes });

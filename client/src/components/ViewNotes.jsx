@@ -256,7 +256,7 @@ export default function ViewNotes() {
     } else setFilteredCards(cards);
   }, [searchQuery, cards]);
 
-  console.log(userData.userData.user._id);
+  console.log(userData);
   return (
     <div className="sm:ml-[100px] ml-[80px] py-8 px-2 sm:p-8 ">
       <h2 className="text-3xl font-bold text-start mt-1">
