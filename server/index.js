@@ -26,35 +26,70 @@ const updateRoute = require("./api/update");
 const loginRoute = require("./api/login");
 const registerRoute = require("./api/register");
 
-// Connect to the database
-connectToDB()
-  .then(() => {
-    console.log("Database connected successfully");
+// Flag to track database connection status
+let isDBConnected = false;
 
-    // CRUD Routes
-    app.use(readRoute);
-    app.use(createRoute);
-    app.use(deleteRoute);
-    app.use(updateRoute);
+// Middleware to check database connection
+const checkDBConnection = (req, res, next) => {
+  if (isDBConnected) {
+    next();
+  } else {
+    res
+      .status(503)
+      .json({
+        error: "Service Temporarily Unavailable: Connecting to database",
+      });
+  }
+};
 
-    app.use(loginRoute);
-    app.use(registerRoute);
+// Retry connection to the database with exponential backoff
+const connectWithRetry = (retries = 5, delay = 2000) => {
+  connectToDB()
+    .then(() => {
+      console.log("Database connected successfully");
+      isDBConnected = true;
 
-    // Handle unexpected errors
-    app.use((err, req, res, next) => {
-      console.error("Unexpected error", err);
-      res.status(500).json({ error: "An unexpected error occurred" });
+      // CRUD Routes
+      app.use(readRoute);
+      app.use(createRoute);
+      app.use(deleteRoute);
+      app.use(updateRoute);
+
+      app.use(loginRoute);
+      app.use(registerRoute);
+
+      // Handle unexpected errors
+      app.use((err, req, res, next) => {
+        console.error("Unexpected error", err);
+        res.status(500).json({ error: "An unexpected error occurred" });
+      });
+
+      // Start the server
+      const PORT = process.env.PORT || 3000;
+      app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+      });
+    })
+    .catch((error) => {
+      console.error(
+        `Database connection failed. Retrying in ${delay / 1000} seconds...`,
+        error
+      );
+      if (retries > 0) {
+        setTimeout(() => connectWithRetry(retries - 1, delay * 2), delay);
+      } else {
+        console.error(
+          "Could not connect to the database after multiple attempts. Exiting."
+        );
+        process.exit(1);
+      }
     });
+};
 
-    // Start the server
-    const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
-  })
-  .catch((error) => {
-    console.error("Database connection failed", error);
-    process.exit(1);
-  });
+// Apply the database connection check middleware to all routes
+app.use(checkDBConnection);
+
+// Start trying to connect to the database
+connectWithRetry();
 
 module.exports = app;
