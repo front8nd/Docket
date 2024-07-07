@@ -135,13 +135,13 @@ export default function ViewNotes() {
       const res = await axios.post(
         "https://docket-server.vercel.app/api/read",
         {
+          id: userData.userData.user._id,
+        },
+        {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${userData.userData.token}`,
           },
-        },
-        {
-          id: userData.userData.user._id,
         }
       );
       setCards(res.data.data);
@@ -167,18 +167,18 @@ export default function ViewNotes() {
       const res = await axios.post(
         "https://docket-server.vercel.app/api/create",
         {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${userData.userData.token}`,
-          },
-        },
-        {
           userId: userData.userData.user._id,
           id: UUID,
           title: formData.title,
           content: formData.content,
           date: formattedDate,
           color: data.color,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${userData.userData.token}`,
+          },
         }
       );
 
@@ -200,13 +200,13 @@ export default function ViewNotes() {
       const res = await axios.delete(
         "https://docket-server.vercel.app/api/delete",
         {
+          data: { id: id, userId: userData.userData.user._id },
+        },
+        {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${userData.userData.token}`,
           },
-        },
-        {
-          data: { id: id, userId: userData.userData.user._id },
         }
       );
       console.log(res);
@@ -225,15 +225,15 @@ export default function ViewNotes() {
       const res = await axios.put(
         "https://docket-server.vercel.app/api/update",
         {
+          userId: userData.userData.user._id,
+          id: id,
+          ...updatedData,
+        },
+        {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${userData.userData.token}`,
           },
-        },
-        {
-          userId: userData.userData.user._id,
-          id: id,
-          ...updatedData,
         }
       );
       console.log(res);
