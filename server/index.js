@@ -1,5 +1,3 @@
-// index.js
-
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
@@ -34,13 +32,11 @@ connectToDB()
     console.log("Database connected successfully");
 
     // CRUD Routes
-
     app.use(readRoute);
     app.use(createRoute);
     app.use(deleteRoute);
     app.use(updateRoute);
 
-    //app.use(authRoutes);
     app.use(loginRoute);
     app.use(registerRoute);
 
