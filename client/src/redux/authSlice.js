@@ -9,7 +9,7 @@ export const login = createAsyncThunk(
   async (credentials, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/login",
+        "https://docket-server.vercel.app/api/login",
         credentials
       );
       return response.data;
@@ -42,7 +42,7 @@ export const changePassword = createAsyncThunk(
     const { userData } = getState().auth;
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/acc_password",
+        "https://docket-server.vercel.app/api/acc_password",
         credentials,
         {
           headers: {
@@ -65,7 +65,7 @@ export const changeEmail = createAsyncThunk(
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/acc_email",
+        "https://docket-server.vercel.app/api/acc_email",
         credentials,
         {
           headers: {
