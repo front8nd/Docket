@@ -111,6 +111,14 @@ export default {
             opacity: "1",
           },
         },
+        "slide-top": {
+          "0%": {
+            transform: "translateY(-20px)",
+          },
+          "100%": {
+            transform: "translateY(0)",
+          },
+        },
       },
       animation: {
         "bounce-in-bck": "bounce-in-bck 1.1s both",
@@ -120,6 +128,8 @@ export default {
         "rotate-out":
           "rotate-out 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both",
         "slide-in": "slide-in 1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both",
+        "slide-top":
+          "slide-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both",
       },
     },
   },

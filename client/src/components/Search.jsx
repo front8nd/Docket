@@ -14,7 +14,7 @@ export default function Search() {
       />
       <input
         placeholder="Search"
-        className="outline-0 border-0 text-[16px] w-auto"
+        className="outline-0 border-0 text-[16px] w-28"
         value={search}
         name="search"
         onChange={(e) => {

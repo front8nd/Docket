@@ -8,6 +8,8 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import ProtectedRoute from "./Routes/protected";
 import PublicRoute from "./Routes/public";
+import Password from "./pages/Password";
+import Email from "./pages/Email";
 function App() {
   return (
     <div className="scroll-smooth	">
@@ -25,6 +27,14 @@ function App() {
             <Route
               path="/SignUp"
               element={<PublicRoute component={SignUp} />}
+            ></Route>
+            <Route
+              path="/UpdatePassword"
+              element={<ProtectedRoute component={Password} />}
+            ></Route>
+            <Route
+              path="/UpdateEmail"
+              element={<ProtectedRoute component={Email} />}
             ></Route>
           </Routes>
         </Router>

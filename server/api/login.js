@@ -26,6 +26,8 @@ router.post("/api/login", async (req, res) => {
       expiresIn: "24h",
     });
 
+    console.log(token);
+
     // Return token and user data (excluding sensitive info)
     const { password: _, ...userWithoutPassword } = user._doc;
     res.json({ token, user: userWithoutPassword });
