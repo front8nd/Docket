@@ -25,6 +25,7 @@ const updateRoute = require("./api/update");
 
 const updatePassword = require("./api/change_password");
 const updateEmail = require("./api/change_email");
+const deleteAccount = require("./api/delete_account");
 
 const loginRoute = require("./api/login");
 const registerRoute = require("./api/register");
@@ -105,6 +106,7 @@ app.use(registerRoute);
 
 app.use(updatePassword);
 app.use(updateEmail);
+app.use(deleteAccount);
 
 // Start the server
 const PORT = process.env.PORT || 3000;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { login } from "../redux/authSlice";
+import { login, resetSuccess } from "../redux/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 export default function Login() {
   const dispatch = useDispatch();
@@ -21,13 +21,18 @@ export default function Login() {
     dispatch(login(data));
   };
 
-  console.log(userData);
   useEffect(() => {
     if (userData.isAuthenticated === true) {
       navigate("/");
     }
   }, [dispatch, userData.isAuthenticated]);
 
+  useEffect(() => {
+    if (userData.error)
+      setTimeout(() => {
+        dispatch(resetSuccess());
+      }, [3000]);
+  }, [userData.error, dispatch]);
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">

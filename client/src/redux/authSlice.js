@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { useDispatch } from "react-redux";
 
 const userData = sessionStorage.getItem("userData");
 const parsedUserData = userData ? JSON.parse(userData) : null;
@@ -80,6 +81,27 @@ export const changeEmail = createAsyncThunk(
     }
   }
 );
+export const deleteUser = createAsyncThunk(
+  "auth/deleteUser",
+  async (credentials, { rejectWithValue, getState }) => {
+    const { userData } = getState().auth;
+    try {
+      const response = await axios.delete(
+        "https://docket-server.vercel.app/api/acc_delete",
+        {
+          headers: {
+            Authorization: `Bearer ${userData.token}`,
+          },
+          data: credentials, // Send credentials in the body
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Account could'nt be deleted: ", error);
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 
 const authSlice = createSlice({
   name: "auth",
@@ -100,6 +122,8 @@ const authSlice = createSlice({
     },
     resetSuccess(state) {
       state.Success = null;
+      state.registrationSuccess = null;
+      state.error = null;
     },
   },
   extraReducers: (builder) => {
@@ -155,9 +179,21 @@ const authSlice = createSlice({
         state.Success = action.payload;
         state.userData.user.email = action.payload.data;
         sessionStorage.setItem("userData", JSON.stringify(state.userData));
-        console.log("x", action.payload.data);
       })
       .addCase(changeEmail.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(deleteUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.Success = null;
+      })
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.Success = action.payload;
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

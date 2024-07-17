@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { LuLogOut } from "react-icons/lu";
-import { changeEmail, changePassword, logout } from "../redux/authSlice";
-import { useDispatch } from "react-redux";
+import { deleteUser, logout, resetSuccess } from "../redux/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { VscAccount } from "react-icons/vsc";
 import { MdEmail } from "react-icons/md";
 import { PiPasswordFill } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
+import { AiOutlineUserDelete } from "react-icons/ai";
 
 export default function Account() {
+  const userData = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
@@ -16,6 +18,14 @@ export default function Account() {
 
   const logoutUser = async () => {
     await dispatch(logout());
+  };
+
+  const deleteAccount = async () => {
+    await dispatch(
+      deleteUser({
+        userId: userData.userData.user._id,
+      })
+    );
   };
 
   useEffect(() => {
@@ -27,6 +37,14 @@ export default function Account() {
       return () => clearTimeout(timer);
     }
   }, [menu]);
+
+  useEffect(() => {
+    if (userData.Success.success === true) {
+      dispatch(logout());
+      dispatch(resetSuccess());
+      navigate("/");
+    }
+  }, [dispatch, userData.Success]);
 
   return (
     <div className="relative flex sm:mr-12 mr-4 align-middle w-full justify-end ">
@@ -105,6 +123,26 @@ export default function Account() {
               <PiPasswordFill />
             </i>
             <p className="sm:text-[14px]">Change Password</p>
+          </div>
+          <div
+            onClick={deleteAccount}
+            onMouseEnter={() => setHover("delete")}
+            onMouseLeave={() => setHover(false)}
+            onTouchMove={() => setHover(!true)}
+            className={`flex items-center justify-start gap-4 w-full cursor-pointer p-2 rounded ${
+              hover === "delete" ? "bg-slate-100" : ""
+            }`}
+          >
+            <i
+              style={{
+                fontSize: "22px",
+              }}
+            >
+              <AiOutlineUserDelete />
+            </i>
+            <p className="sm:text-[14px]">
+              {userData.loading === true ? "Please Wait..." : "Delete Account"}
+            </p>
           </div>
         </div>
       )}

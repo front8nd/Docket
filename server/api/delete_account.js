@@ -1,15 +1,17 @@
 const express = require("express");
 const router = express.Router();
 const notesModel = require("../models/notes");
-const authMiddleware = require("../middleware/auth");
+const usersModel = require("../models/users");
 
+const authMiddleware = require("../middleware/auth");
+console.log("run");
 // Route to delete note by ID
 router.delete("/api/acc_delete", authMiddleware, async (req, res) => {
   const { userId } = req.body;
   console.log(req.body);
   try {
     // Find user
-    const user = await UsersModel.findById(userId);
+    const user = await usersModel.findById(userId);
 
     if (!user) {
       return res
@@ -24,9 +26,9 @@ router.delete("/api/acc_delete", authMiddleware, async (req, res) => {
     // }
 
     // Delete all ntoes then user ID
-    await notesModel.deleteMany({ _id: id });
+    await notesModel.deleteMany({ userId });
 
-    await UsersModel.findByIdAndDelete(userId);
+    await usersModel.findByIdAndDelete(userId);
 
     res.status(200).json({
       success: true,
