@@ -18,17 +18,16 @@ app.use(express.json());
 app.use(cors());
 
 // All Routes
-const readRoute = require("./api/read");
-const createRoute = require("./api/create");
-const deleteRoute = require("./api/delete");
-const updateRoute = require("./api/update");
+const readRoute = require("./api/CRUD/read");
+const createRoute = require("./api/CRUD/create");
+const deleteRoute = require("./api/CRUD/delete");
+const updateRoute = require("./api/CRUD/update");
 
-const updatePassword = require("./api/change_password");
-const updateEmail = require("./api/change_email");
-const deleteAccount = require("./api/delete_account");
-
-const loginRoute = require("./api/login");
-const registerRoute = require("./api/register");
+const loginRoute = require("./api/Account/login");
+const registerRoute = require("./api/Account/register");
+const updatePassword = require("./api/Account/change_password");
+const updateEmail = require("./api/Account/change_email");
+const deleteAccount = require("./api/Account/delete_account");
 
 // // Flag to track database connection status
 // let isDBConnected = false;

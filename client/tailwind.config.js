@@ -119,6 +119,14 @@ export default {
             transform: "translateY(0)",
           },
         },
+        "slide-snackbar": {
+          "0%": {
+            transform: "translateY(-100px) translateX(-50%)",
+          },
+          "100%": {
+            transform: "translateY(0) translateX(-50%)",
+          },
+        },
       },
       animation: {
         "bounce-in-bck": "bounce-in-bck 1.1s both",
@@ -130,6 +138,8 @@ export default {
         "slide-in": "slide-in 1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both",
         "slide-top":
           "slide-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both",
+        "slide-snackbar":
+          "slide-snackbar 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both",
       },
     },
   },

@@ -10,35 +10,38 @@ import ProtectedRoute from "./Routes/protected";
 import PublicRoute from "./Routes/public";
 import Password from "./pages/Password";
 import Email from "./pages/Email";
+import { SnackbarProvider } from "./Hooks/useSnackbar";
 function App() {
   return (
     <div className="scroll-smooth	">
-      <Provider store={store}>
-        <Router>
-          <Routes>
-            <Route
-              path="/"
-              element={<ProtectedRoute component={ManageNotes} />}
-            ></Route>
-            <Route
-              path="/Login"
-              element={<PublicRoute component={Login} />}
-            ></Route>
-            <Route
-              path="/SignUp"
-              element={<PublicRoute component={SignUp} />}
-            ></Route>
-            <Route
-              path="/UpdatePassword"
-              element={<ProtectedRoute component={Password} />}
-            ></Route>
-            <Route
-              path="/UpdateEmail"
-              element={<ProtectedRoute component={Email} />}
-            ></Route>
-          </Routes>
-        </Router>
-      </Provider>
+      <SnackbarProvider>
+        <Provider store={store}>
+          <Router>
+            <Routes>
+              <Route
+                path="/"
+                element={<ProtectedRoute component={ManageNotes} />}
+              ></Route>
+              <Route
+                path="/Login"
+                element={<PublicRoute component={Login} />}
+              ></Route>
+              <Route
+                path="/SignUp"
+                element={<PublicRoute component={SignUp} />}
+              ></Route>
+              <Route
+                path="/UpdatePassword"
+                element={<ProtectedRoute component={Password} />}
+              ></Route>
+              <Route
+                path="/UpdateEmail"
+                element={<ProtectedRoute component={Email} />}
+              ></Route>
+            </Routes>
+          </Router>
+        </Provider>
+      </SnackbarProvider>
     </div>
   );
 }

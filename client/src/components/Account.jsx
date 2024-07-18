@@ -7,6 +7,7 @@ import { MdEmail } from "react-icons/md";
 import { PiPasswordFill } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineUserDelete } from "react-icons/ai";
+import { useSnackbar } from "../Hooks/useSnackbar";
 
 export default function Account() {
   const userData = useSelector((state) => state.auth);
@@ -46,8 +47,10 @@ export default function Account() {
     }
   }, [dispatch, userData.Success]);
 
+  const showSnackbar = useSnackbar();
+
   return (
-    <div className="relative flex sm:mr-12 mr-4 align-middle w-full justify-end ">
+    <div className="relative flex sm:mr-12 mr-4 align-middle w-full justify-end cursor-pointer">
       <i
         onClick={() => showMenu(!menu)}
         style={{
@@ -55,14 +58,14 @@ export default function Account() {
         }}
         className="flex gap-2 text-gray-800 items-center "
       >
-        <p className="text-[14px] text-ellipsis overflow-hidden w-20 font-bold">
-          {userData.userData.user.name}
-        </p>
         <VscAccount
           className={`cursor-pointer text-gray-400 hover:text-gray-800 ${
             menu === true ? "text-gray-900" : ""
           }`}
         />
+        <p className="text-[14px] text-ellipsis overflow-hidden w-20 font-bold">
+          {userData.userData.user.name}
+        </p>
       </i>
       {isVisible && (
         <div
@@ -71,7 +74,9 @@ export default function Account() {
           }`}
         >
           <div
-            onClick={logoutUser}
+            onClick={() => {
+              showSnackbar("Logout");
+            }}
             onMouseEnter={() => setHover("logout")}
             onMouseLeave={() => setHover(null)}
             onTouchMove={() => setHover(!true)}

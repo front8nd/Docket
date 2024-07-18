@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const notesModel = require("../models/notes");
-const authMiddleware = require("../middleware/auth");
+const notesModel = require("../../models/notes");
+const authMiddleware = require("../../middleware/auth");
 
 // Route to retrieve all notes
 router.post("/api/read", authMiddleware, async (req, res) => {

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const notesModel = require("../models/notes");
-const authMiddleware = require("../middleware/auth");
+const notesModel = require("../../models/notes");
+const authMiddleware = require("../../middleware/auth");
 
 //'create' : if only base path is defined in index (1)
 //'/' : if full path is defined in index (2)

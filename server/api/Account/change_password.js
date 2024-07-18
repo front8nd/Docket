@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const UsersModel = require("../models/users");
-const authMiddleware = require("../middleware/auth");
+const UsersModel = require("../../models/users");
+const authMiddleware = require("../../middleware/auth");
 const bcrypt = require("bcryptjs");
 
 router.post("/api/acc_password", authMiddleware, async (req, res) => {
