@@ -39,7 +39,7 @@ export default function Account() {
   }, [menu]);
 
   useEffect(() => {
-    if (userData.Success.success === true) {
+    if (userData?.Success?.success === true) {
       dispatch(logout());
       dispatch(resetSuccess());
       navigate("/");
@@ -53,7 +53,11 @@ export default function Account() {
         style={{
           fontSize: "24px",
         }}
+        className="flex gap-2 text-gray-800 items-center "
       >
+        <p className="text-[14px] text-ellipsis overflow-hidden w-20 font-bold">
+          {userData.userData.user.name}
+        </p>
         <VscAccount
           className={`cursor-pointer text-gray-400 hover:text-gray-800 ${
             menu === true ? "text-gray-900" : ""

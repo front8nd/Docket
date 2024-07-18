@@ -23,7 +23,7 @@ router.post("/api/login", async (req, res) => {
 
     // Generate JWT token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "24h",
+      expiresIn: "1m",
     });
 
     console.log(token);
