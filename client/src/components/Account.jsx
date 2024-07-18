@@ -18,10 +18,12 @@ export default function Account() {
   const [hover, setHover] = useState(false);
 
   const logoutUser = async () => {
+    showSnackbar("Logging Out, Please wait..");
     await dispatch(logout());
   };
 
   const deleteAccount = async () => {
+    showSnackbar("Deleting Account, Please wait..");
     await dispatch(
       deleteUser({
         userId: userData.userData.user._id,
@@ -63,7 +65,7 @@ export default function Account() {
             menu === true ? "text-gray-900" : ""
           }`}
         />
-        <p className="text-[14px] text-ellipsis overflow-hidden w-20 font-bold">
+        <p className="text-[14px] text-ellipsis overflow-hidden w-20 font-bold whitespace-nowrap">
           {userData.userData.user.name}
         </p>
       </i>
@@ -74,9 +76,7 @@ export default function Account() {
           }`}
         >
           <div
-            onClick={() => {
-              showSnackbar("Logout");
-            }}
+            onClick={logoutUser}
             onMouseEnter={() => setHover("logout")}
             onMouseLeave={() => setHover(null)}
             onTouchMove={() => setHover(!true)}
