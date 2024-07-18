@@ -1,6 +1,5 @@
 import axios from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { useDispatch } from "react-redux";
 
 const userData = sessionStorage.getItem("userData");
 const parsedUserData = userData ? JSON.parse(userData) : null;
