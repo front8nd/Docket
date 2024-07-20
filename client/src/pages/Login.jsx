@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { login, resetSuccess } from "../redux/authSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { useSnackbar } from "../Hooks/useSnackbar";
 export default function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ export default function Login() {
     const { name, value } = e.target;
     setData((prevData) => ({ ...prevData, [name]: value }));
   };
+  const showSnackbar = useSnackbar();
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -23,6 +25,7 @@ export default function Login() {
 
   useEffect(() => {
     if (userData.isAuthenticated === true) {
+      showSnackbar("Logged In");
       navigate("/");
     }
   }, [dispatch, userData.isAuthenticated]);

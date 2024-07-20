@@ -12,21 +12,19 @@ router.post("/api/login", async (req, res) => {
     // Check if user exists
     const user = await Users.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res.status(400).json({ message: "User doesn't exists" });
     }
 
     // Validate password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res.status(400).json({ message: "Invalid Password" });
     }
 
     // Generate JWT token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "24h",
     });
-
-    console.log(token);
 
     // Return token and user data (excluding sensitive info)
     const { password: _, ...userWithoutPassword } = user._doc;

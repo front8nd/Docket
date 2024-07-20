@@ -3,7 +3,13 @@ import { MdEdit } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { MdDone } from "react-icons/md";
 import { RxCross1 } from "react-icons/rx";
-import { NotesData } from "../redux/NotesSlice";
+import {
+  create,
+  deleteNote,
+  fetch,
+  NotesData,
+  update,
+} from "../redux/NotesSlice";
 import { AiOutlineDelete } from "react-icons/ai";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
@@ -13,7 +19,7 @@ export default function ViewNotes() {
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.auth);
   const data = useSelector((state) => state.Notes.data);
-
+  const allCards = useSelector((state) => state.Notes);
   const [loading, setLoading] = useState(false);
   // Data
   const [formData, setFromData] = useState({
@@ -56,7 +62,7 @@ export default function ViewNotes() {
   const handleEditCard = (id) => {
     setEditCard(id);
     // find card id to fill updated card
-    const card = cards.find((c) => c.id === id);
+    const card = allCards.AllCards.find((c) => c._id === id);
     setUpdatedData({ title: card.title, content: card.content });
   };
 
@@ -116,132 +122,55 @@ export default function ViewNotes() {
     return formattedDate;
   };
 
-  // Read Note
-  const [cards, setCards] = useState([]);
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      /*
-      Send data via url
-      const userId = userData.userData.user._id; 
-      const res = await axios.get(`https://docket-server.vercel.app/api/read?id=${userId}
-      `);
-
-      Use req.query to access parameters
-
-      const { id } = req.query;
-
-      */
-      const res = await axios.post(
-        "https://docket-server.vercel.app/api/read",
-        {
-          id: userData.userData.user._id,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${userData.userData.token}`,
-          },
-        }
-      );
-      setCards(res.data.data);
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-    }
-  };
-
   // Fetch Data on render
+
   useEffect(() => {
-    fetchData();
+    dispatch(fetch(userData.userData.user._id));
   }, [dispatch]);
 
-  // Create New Card
+  // // Create New Card
   const submitHandler = async (e) => {
     e.preventDefault();
-    const UUID = uuidv4();
     const formattedDate = formatDate();
 
-    try {
-      const res = await axios.post(
-        "https://docket-server.vercel.app/api/create",
-        {
-          userId: userData.userData.user._id,
-          id: UUID,
-          title: formData.title,
-          content: formData.content,
-          date: formattedDate,
-          color: data.color,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${userData.userData.token}`,
-          },
-        }
-      );
-
-      dispatch(
-        NotesData({ id: "", title: "", content: "", date: "", color: "" })
-      );
-      setFromData({ id: "", title: "", content: "", date: "", color: "" });
-      await fetchData();
-      console.log(res.data);
-    } catch (err) {
-      console.error(err);
-    }
+    const newNote = {
+      userId: userData.userData.user._id,
+      title: formData.title,
+      content: formData.content,
+      date: formattedDate,
+      color: data.color,
+    };
+    await dispatch(create(newNote));
+    await dispatch(fetch(userData.userData.user._id));
+    await dispatch(
+      NotesData({ id: "", title: "", content: "", date: "", color: "" })
+    );
+    setFromData({ id: "", title: "", content: "", date: "", color: "" });
   };
 
   // Delete Data
 
   const deleteCard = async (id) => {
-    try {
-      const res = await axios.delete(
-        "https://docket-server.vercel.app/api/delete",
-        {
-          data: { id: id, userId: userData.userData.user._id },
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${userData.userData.token}`,
-          },
-        }
-      );
-      console.log(res);
-      await fetchData();
-    } catch (error) {
-      console.log(error);
-    }
+    await dispatch(
+      deleteNote({
+        id: id,
+        userId: userData.userData.user._id,
+      })
+    );
+    await dispatch(fetch(userData.userData.user._id));
   };
 
   // Update Data
   const [updatedData, setUpdatedData] = useState({});
-  console.log(cards);
   const updateCard = async (id) => {
-    console.log(id);
-    try {
-      const res = await axios.put(
-        "https://docket-server.vercel.app/api/update",
-        {
-          userId: userData.userData.user._id,
-          id: id,
-          ...updatedData,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${userData.userData.token}`,
-          },
-        }
-      );
-      console.log(res);
-      await fetchData();
-      setEditCard(null);
-    } catch (error) {
-      console.log(error);
-    }
+    await dispatch(
+      update({
+        userId: userData.userData.user._id,
+        id: id,
+        ...updatedData,
+      })
+    );
+    setEditCard(null);
   };
 
   // Search Features
@@ -249,20 +178,19 @@ export default function ViewNotes() {
   const [filteredCards, setFilteredCards] = useState([]);
   useEffect(() => {
     if (searchQuery !== "") {
-      const filteredResults = cards.filter((e) =>
+      const filteredResults = allCards.AllCards.filter((e) =>
         e.title.toLowerCase().includes(searchQuery.toLowerCase())
       );
       setFilteredCards(filteredResults);
-    } else setFilteredCards(cards);
-  }, [searchQuery, cards]);
+    } else setFilteredCards(allCards.AllCards);
+  }, [searchQuery, allCards]);
 
-  console.log(userData);
   return (
     <div className="sm:ml-[100px] ml-[80px] py-8 px-2 sm:p-8 ">
       <h2 className="text-3xl font-bold text-start mt-1">
         All Your Notes at One Place
       </h2>
-      {loading === true ? (
+      {allCards.loading === true ? (
         <Loading />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 my-8">
@@ -313,10 +241,10 @@ export default function ViewNotes() {
           {filteredCards.length !== 0 ? (
             filteredCards.map((e) => (
               <div
-                key={e.id}
+                key={e._id}
                 className={`${e.color} shadow-lg rounded-2xl min-h-52 h-auto  p-4 relative grid-cols-subgrid`}
               >
-                {editCard === e.id ? (
+                {editCard === e._id ? (
                   <div>
                     <input
                       name="title"
@@ -366,7 +294,7 @@ export default function ViewNotes() {
                       {formatDateTime(e.date)}
                     </p>
                     <button
-                      onClick={() => handleEditCard(e.id)}
+                      onClick={() => handleEditCard(e._id)}
                       className="absolute bottom-3 right-3 flex gap-4 flex-col"
                     >
                       <i className="bg-black rounded-full text-white p-2 hover:bg-white hover:text-black cursor-pointer">

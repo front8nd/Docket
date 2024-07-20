@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { register } from "../redux/authSlice";
 import { useSelector, useDispatch } from "react-redux";
+import { useSnackbar } from "../Hooks/useSnackbar";
 export default function SignUp() {
+  const showSnackbar = useSnackbar();
+
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.auth);
   const [data, setData] = useState({
@@ -28,6 +31,7 @@ export default function SignUp() {
         email: "",
         password: "",
       });
+      showSnackbar("Registered Successfully");
     }
     [dispatch, userData.registrationSuccess];
   });

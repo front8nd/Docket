@@ -6,7 +6,6 @@ const authMiddleware = require("../../middleware/auth");
 // Route to delete note by ID
 router.delete("/api/delete", authMiddleware, async (req, res) => {
   const { userId, id } = req.body;
-  console.log(req.body);
   try {
     const note = await notesModel.findOne({ _id: id });
 

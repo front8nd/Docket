@@ -1,6 +1,9 @@
 import axios from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
+const apiUrl =
+  import.meta.env.MODE === "production" ? apiUrl : "http://localhost:3000";
+
 const userData = sessionStorage.getItem("userData");
 const parsedUserData = userData ? JSON.parse(userData) : null;
 
@@ -8,10 +11,7 @@ export const login = createAsyncThunk(
   "auth/login",
   async (credentials, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        "https://docket-server.vercel.app/api/login",
-        credentials
-      );
+      const response = await axios.post(`${apiUrl}/api/login`, credentials);
       return response.data;
     } catch (error) {
       console.error("Login Failed: ", error);
@@ -24,10 +24,7 @@ export const register = createAsyncThunk(
   "auth/register",
   async (credentials, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        "https://docket-server.vercel.app/api/register",
-        credentials
-      );
+      const response = await axios.post(`${apiUrl}/api/register`, credentials);
       return response.data;
     } catch (error) {
       console.error("Registration Failed: ", error);
@@ -42,7 +39,7 @@ export const changePassword = createAsyncThunk(
     const { userData } = getState().auth;
     try {
       const response = await axios.post(
-        "https://docket-server.vercel.app/api/acc_password",
+        `${apiUrl}/api/acc_password`,
         credentials,
         {
           headers: {
@@ -65,7 +62,7 @@ export const changeEmail = createAsyncThunk(
 
     try {
       const response = await axios.post(
-        "https://docket-server.vercel.app/api/acc_email",
+        `${apiUrl}/api/acc_email`,
         credentials,
         {
           headers: {
@@ -85,15 +82,12 @@ export const deleteUser = createAsyncThunk(
   async (credentials, { rejectWithValue, getState }) => {
     const { userData } = getState().auth;
     try {
-      const response = await axios.delete(
-        "https://docket-server.vercel.app/api/acc_delete",
-        {
-          headers: {
-            Authorization: `Bearer ${userData.token}`,
-          },
-          data: credentials, // Send credentials in the body
-        }
-      );
+      const response = await axios.delete(`${apiUrl}/api/acc_delete`, {
+        headers: {
+          Authorization: `Bearer ${userData.token}`,
+        },
+        data: credentials, // Send credentials in the body
+      });
       return response.data;
     } catch (error) {
       console.error("Account could'nt be deleted: ", error);

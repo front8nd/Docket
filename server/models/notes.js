@@ -6,11 +6,6 @@ const notesSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  id: {
-    type: String,
-    required: true,
-    unique: true,
-  },
   title: String,
   content: String,
   date: Date,

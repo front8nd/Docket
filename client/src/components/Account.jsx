@@ -20,6 +20,7 @@ export default function Account() {
   const logoutUser = async () => {
     showSnackbar("Logging Out, Please wait..");
     await dispatch(logout());
+    showSnackbar("Logged Out Successfully");
   };
 
   const deleteAccount = async () => {
@@ -29,6 +30,7 @@ export default function Account() {
         userId: userData.userData.user._id,
       })
     );
+    showSnackbar("Account Deleted Successfulyy");
   };
 
   useEffect(() => {
