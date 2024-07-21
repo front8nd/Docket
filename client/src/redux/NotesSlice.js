@@ -1,10 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const apiUrl =
-  import.meta.env.MODE === "production"
-    ? "https://docket-server.vercel.app"
-    : "http://localhost:3000";
+// const apiUrl =
+//   import.meta.env.MODE === "production"
+//     ? "https://docket-server.vercel.app"
+//     : "http://localhost:3000";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 console.log(import.meta.env.VITE_API_URL);
 export const fetch = createAsyncThunk(
