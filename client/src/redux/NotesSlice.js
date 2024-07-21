@@ -1,20 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const apiUrl =
-  import.meta.env.MODE === "production" ? apiUrl : "http://localhost:3000";
-/*
-  //     Send data via url
-  //     const userId = userData.userData.user._id;
-  //     const res = await axios.get(`https://docket-server.vercel.app/api/read?id=${userId}
-  //     `);
-
-  //     Use req.query to access parameters
-
-  //     const { id } = req.query;
-
-  //     
-*/
+const apiUrl = import.meta.env.MODE === "production" ? "https://your-production-api-url.com" : "http://localhost:3000";
 
 export const fetch = createAsyncThunk(
   "auth/fetch",
@@ -23,19 +10,13 @@ export const fetch = createAsyncThunk(
     try {
       const response = await axios.post(
         `${apiUrl}/api/read`,
-        {
-          id: id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${userData.token}`,
-          },
-        }
+        { id },
+        { headers: { Authorization: `Bearer ${userData.token}` } }
       );
       return response.data;
     } catch (error) {
       console.error("Fetching Failed: ", error);
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
@@ -45,15 +26,15 @@ export const create = createAsyncThunk(
   async (data, { rejectWithValue, getState }) => {
     const { userData } = getState().auth;
     try {
-      const response = await axios.post(`${apiUrl}/api/create`, data, {
-        headers: {
-          Authorization: `Bearer ${userData.token}`,
-        },
-      });
+      const response = await axios.post(
+        `${apiUrl}/api/create`,
+        data,
+        { headers: { Authorization: `Bearer ${userData.token}` } }
+      );
       return response.data;
     } catch (error) {
       console.error("Couldn't Create Note: ", error);
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
@@ -63,53 +44,56 @@ export const update = createAsyncThunk(
   async (data, { rejectWithValue, getState }) => {
     const { userData } = getState().auth;
     try {
-      const response = await axios.put(`${apiUrl}/api/update`, data, {
-        headers: {
-          Authorization: `Bearer ${userData.token}`,
-        },
-      });
+      const response = await axios.put(
+        `${apiUrl}/api/update`,
+        data,
+        { headers: { Authorization: `Bearer ${userData.token}` } }
+      );
       return response.data;
     } catch (error) {
-      console.error("Couldn't Create Note: ", error);
-      return rejectWithValue(error.response.data);
+      console.error("Couldn't Update Note: ", error);
+      return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
 
 export const deleteNote = createAsyncThunk(
   "auth/delete",
-  async (details, { rejectWithValue, getState }) => {
+  async ({ id, userId }, { rejectWithValue, getState }) => {
     const { userData } = getState().auth;
     try {
-      const response = await axios.delete(`${apiUrl}/api/delete`, {
-        data: { id: details.id, userId: details.userId },
-        headers: {
-          Authorization: `Bearer ${userData.token}`,
-        },
-      });
+      const response = await axios.delete(
+        `${apiUrl}/api/delete`,
+        {
+          data: { id, userId },
+          headers: { Authorization: `Bearer ${userData.token}` }
+        }
+      );
       return response.data;
     } catch (error) {
-      console.error("Couldn't Create Note: ", error);
-      return rejectWithValue(error.response.data);
+      console.error("Couldn't Delete Note: ", error);
+      return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
 
-export const NotesSlice = createSlice({
-  name: "Notes",
-  initialState: {
-    data: {
-      id: "",
-      title: "",
-      content: "",
-      date: "",
-      color: "",
-    },
-    AllCards: [],
-    search: "",
-    status: "idle",
-    error: null,
+const initialState = {
+  data: {
+    id: "",
+    title: "",
+    content: "",
+    date: "",
+    color: "",
   },
+  AllCards: [],
+  search: "",
+  status: "idle",
+  error: null,
+};
+
+const NotesSlice = createSlice({
+  name: "Notes",
+  initialState,
   reducers: {
     NotesData: (state, action) => {
       state.data = { ...state.data, ...action.payload };
