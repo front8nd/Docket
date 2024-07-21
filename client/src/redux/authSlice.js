@@ -1,8 +1,13 @@
 import axios from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-const apiUrl =
-  import.meta.env.MODE === "production" ? apiUrl : "http://localhost:3000";
+// const apiUrl =
+//   import.meta.env.MODE === "production"
+//     ? "https://docket-server.vercel.app"
+//     : "http://localhost:3000";
+const apiUrl = import.meta.env.VITE_API_URL;
+
+console.log(import.meta.env.VITE_API_URL);
 
 const userData = sessionStorage.getItem("userData");
 const parsedUserData = userData ? JSON.parse(userData) : null;
